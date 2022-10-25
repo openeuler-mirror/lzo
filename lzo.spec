@@ -1,6 +1,6 @@
 Name:           lzo
 Version:        2.10
-Release:        1
+Release:        2
 Summary:        a real-time data compression library
 License:        GPLv2+
 URL:            http://www.oberhumer.com/opensource/lzo/
@@ -89,5 +89,8 @@ make check test
 %{_pkgdocdir}
 
 %changelog
+* Tue Oct 25 2022 yanglongkang <yanglongkang@h-partners.com> - 2.10-2
+- rebuild for next release
+
 * Tue Aug 27 2019 openEuler Buildteam <buildteam@openeuler.org> - 2.10-1
 - Package init
