@@ -1,10 +1,11 @@
 Name:           lzo
 Version:        2.10
-Release:        2
+Release:        3
 Summary:        a real-time data compression library
 License:        GPLv2+
 URL:            http://www.oberhumer.com/opensource/lzo/
 Source0:        http://www.oberhumer.com/opensource/lzo/download/%{name}-%{version}.tar.gz
+Patch1:         lzo-Add-sw64-architecture.patch
 BuildRequires:  gcc
 BuildRequires:  zlib-devel
 
@@ -39,6 +40,7 @@ over compression ratio.
 
 %prep
 %setup -q
+%patch1 -p1
 
 %build
 %configure --disable-dependency-tracking --disable-static --enable-shared
@@ -89,6 +91,9 @@ make check test
 %{_pkgdocdir}
 
 %changelog
+* Mon Nov 14 2022 wuzx<wuzx1226@qq.com> - 2.10-3
+- Add sw64 architecture
+
 * Tue Oct 25 2022 yanglongkang <yanglongkang@h-partners.com> - 2.10-2
 - rebuild for next release
 
