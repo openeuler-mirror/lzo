@@ -1,0 +1,89 @@
+From 30f0b035052ad51405f51a89bb8e3e69703808b6 Mon Sep 17 00:00:00 2001
+From: wuzx <wuzx1226@qq.com>
+Date: Fri, 18 Nov 2022 14:23:32 +0800
+Subject: [PATCH] Add sw64 architecture
+
+Add sw64 architecture in file include/lzo/lzodefs.h minilzo/minilzo.c to support sw64 architecture.
+
+Signed-off-by: wuzx <wuzx1226@qq.com>
+---
+ include/lzo/lzodefs.h | 7 +++++--
+ minilzo/minilzo.c     | 9 ++++++---
+ 2 files changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/include/lzo/lzodefs.h b/include/lzo/lzodefs.h
+index c3e2bcf..eec8d89 100644
+--- a/include/lzo/lzodefs.h
++++ b/include/lzo/lzodefs.h
+@@ -818,6 +818,9 @@
+ #elif defined(__aarch64__) || defined(_M_ARM64)
+ #  define LZO_ARCH_ARM64            1
+ #  define LZO_INFO_ARCH             "arm64"
++#elif defined(__sw_64__) || defined(__sw_64) || defined(_M_SW_64)
++#  define LZO_ARCH_SW_64            1
++#  define LZO_INFO_ARCH             "sw_64"
+ #elif defined(__alpha__) || defined(__alpha) || defined(_M_ALPHA)
+ #  define LZO_ARCH_ALPHA            1
+ #  define LZO_INFO_ARCH             "alpha"
+@@ -2282,7 +2285,7 @@ LZO_COMPILE_TIME_ASSERT_HEADER(LZO_SIZEOF_LONG == sizeof(long))
+ #  undef LZO_SIZEOF_LONG_LONG
+ #endif
+ #if !defined(LZO_WORDSIZE)
+-#if (LZO_ARCH_ALPHA)
++#if (LZO_ARCH_ALPHA) || (LZO_ARCH_SW_64)
+ #  define LZO_WORDSIZE              8
+ #elif (LZO_ARCH_AMD64)
+ #  define LZO_WORDSIZE              8
+@@ -2432,7 +2435,7 @@ LZO_COMPILE_TIME_ASSERT_HEADER(LZO_SIZEOF_PTRDIFF_T == sizeof(ptrdiff_t))
+ #  define LZO_ABI_BIG_ENDIAN        1
+ #elif (LZO_ARCH_IA64) && (LZO_OS_POSIX_LINUX || LZO_OS_WIN64)
+ #  define LZO_ABI_LITTLE_ENDIAN     1
+-#elif (LZO_ARCH_ALPHA || LZO_ARCH_AMD64 || LZO_ARCH_BLACKFIN || LZO_ARCH_CRIS || LZO_ARCH_I086 || LZO_ARCH_I386 || LZO_ARCH_MSP430 || LZO_ARCH_RISCV)
++#elif (LZO_ARCH_ALPHA || LZO_ARCH_SW_64 || LZO_ARCH_AMD64 || LZO_ARCH_BLACKFIN || LZO_ARCH_CRIS || LZO_ARCH_I086 || LZO_ARCH_I386 || LZO_ARCH_MSP430 || LZO_ARCH_RISCV)
+ #  define LZO_ABI_LITTLE_ENDIAN     1
+ #elif (LZO_ARCH_AVR32 || LZO_ARCH_M68K || LZO_ARCH_S390 || LZO_ARCH_SPU)
+ #  define LZO_ABI_BIG_ENDIAN        1
+diff --git a/minilzo/minilzo.c b/minilzo/minilzo.c
+index 8fd8664..c9d4b59 100644
+--- a/minilzo/minilzo.c
++++ b/minilzo/minilzo.c
+@@ -838,6 +838,9 @@
+ #elif defined(__aarch64__) || defined(_M_ARM64)
+ #  define LZO_ARCH_ARM64            1
+ #  define LZO_INFO_ARCH             "arm64"
++#elif defined(__sw_64__) || defined(__sw_64) || defined(_M_SW_64)
++#  define LZO_ARCH_SW_64            1
++#  define LZO_INFO_ARCH             "sw_64"
+ #elif defined(__alpha__) || defined(__alpha) || defined(_M_ALPHA)
+ #  define LZO_ARCH_ALPHA            1
+ #  define LZO_INFO_ARCH             "alpha"
+@@ -2302,7 +2305,7 @@ LZO_COMPILE_TIME_ASSERT_HEADER(LZO_SIZEOF_LONG == sizeof(long))
+ #  undef LZO_SIZEOF_LONG_LONG
+ #endif
+ #if !defined(LZO_WORDSIZE)
+-#if (LZO_ARCH_ALPHA)
++#if (LZO_ARCH_ALPHA) || (LZO_ARCH_SW_64) 
+ #  define LZO_WORDSIZE              8
+ #elif (LZO_ARCH_AMD64)
+ #  define LZO_WORDSIZE              8
+@@ -2452,7 +2455,7 @@ LZO_COMPILE_TIME_ASSERT_HEADER(LZO_SIZEOF_PTRDIFF_T == sizeof(ptrdiff_t))
+ #  define LZO_ABI_BIG_ENDIAN        1
+ #elif (LZO_ARCH_IA64) && (LZO_OS_POSIX_LINUX || LZO_OS_WIN64)
+ #  define LZO_ABI_LITTLE_ENDIAN     1
+-#elif (LZO_ARCH_ALPHA || LZO_ARCH_AMD64 || LZO_ARCH_BLACKFIN || LZO_ARCH_CRIS || LZO_ARCH_I086 || LZO_ARCH_I386 || LZO_ARCH_MSP430 || LZO_ARCH_RISCV)
++#elif (LZO_ARCH_ALPHA || LZO_ARCH_SW_64 || LZO_ARCH_AMD64 || LZO_ARCH_BLACKFIN || LZO_ARCH_CRIS || LZO_ARCH_I086 || LZO_ARCH_I386 || LZO_ARCH_MSP430 || LZO_ARCH_RISCV)
+ #  define LZO_ABI_LITTLE_ENDIAN     1
+ #elif (LZO_ARCH_AVR32 || LZO_ARCH_M68K || LZO_ARCH_S390 || LZO_ARCH_SPU)
+ #  define LZO_ABI_BIG_ENDIAN        1
+@@ -2609,7 +2612,7 @@ LZO_COMPILE_TIME_ASSERT_HEADER(LZO_SIZEOF_PTRDIFF_T == sizeof(ptrdiff_t))
+ #  define __LZO_ASM_CLOBBER_LIST_EMPTY          /*empty*/
+ #endif
+ #endif
+-#if (LZO_ARCH_ALPHA)
++#if (LZO_ARCH_ALPHA) || (LZO_ARCH_SW_64)
+ #  define LZO_OPT_AVOID_UINT_INDEX          1
+ #elif (LZO_ARCH_AMD64)
+ #  define LZO_OPT_AVOID_INT_INDEX           1
+-- 
+2.33.0
+
