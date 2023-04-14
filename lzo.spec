@@ -1,6 +1,6 @@
 Name:           lzo
 Version:        2.10
-Release:        2
+Release:        3
 Summary:        a real-time data compression library
 License:        GPLv2+
 URL:            http://www.oberhumer.com/opensource/lzo/
@@ -44,8 +44,8 @@ over compression ratio.
 %configure --disable-dependency-tracking --disable-static --enable-shared
 %make_build
 
-gcc %{optflags} -fpic -Iinclude/lzo -o minilzo/minilzo.o -c minilzo/minilzo.c
-gcc -g -shared -Wl,-z,now -o libminilzo.so.0 -Wl,-soname,libminilzo.so.0 minilzo/minilzo.o
+$CC %{optflags} -fpic -Iinclude/lzo -o minilzo/minilzo.o -c minilzo/minilzo.c
+$CC -g -shared -Wl,-z,now -o libminilzo.so.0 -Wl,-soname,libminilzo.so.0 minilzo/minilzo.o
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -89,6 +89,9 @@ make check test
 %{_pkgdocdir}
 
 %changelog
+* Fri Apr 14 2023 jammyjellyfish <jammyjellyfish255@outlook.com> - 2.10-3
+- Support specify CC
+
 * Tue Oct 25 2022 yanglongkang <yanglongkang@h-partners.com> - 2.10-2
 - rebuild for next release
 
