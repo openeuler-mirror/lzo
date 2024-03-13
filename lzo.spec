@@ -1,6 +1,6 @@
 Name:           lzo
 Version:        2.10
-Release:        3
+Release:        4
 Summary:        a real-time data compression library
 License:        GPLv2+
 URL:            http://www.oberhumer.com/opensource/lzo/
@@ -41,11 +41,19 @@ over compression ratio.
 %setup -q
 
 %build
+
 %configure --disable-dependency-tracking --disable-static --enable-shared
 %make_build
 
-gcc %{optflags} -fpic -Iinclude/lzo -o minilzo/minilzo.o -c minilzo/minilzo.c
-gcc -g -shared -Wl,-z,now -o libminilzo.so.0 -Wl,-soname,libminilzo.so.0 minilzo/minilzo.o
+%if "%toolchain" == "clang"
+    %global make_opts HOSTCC=clang CC=clang CXX=clang++
+    clang %{optflags} -fpic -Iinclude/lzo -o minilzo/minilzo.o -c minilzo/minilzo.c
+    clang -g -shared -Wl,-z,now -o libminilzo.so.0 -Wl,-soname,libminilzo.so.0 minilzo/minilzo.o
+%else
+    gcc %{optflags} -fpic -Iinclude/lzo -o minilzo/minilzo.o -c minilzo/minilzo.c
+    gcc -g -shared -Wl,-z,now -o libminilzo.so.0 -Wl,-soname,libminilzo.so.0 minilzo/minilzo.o
+%endif
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -89,6 +97,9 @@ ln -s libminilzo.so.0 $RPM_BUILD_ROOT%{_libdir}/libminilzo.so
 %{_pkgdocdir}
 
 %changelog
+* Sat Mar 2 2024 shafeipaozi <sunbo.oerv@isrc.iscas.ac.cn> - 2.10-4
+- add support for clang 
+
 * Tue Feb 14 2023 jiangxinyu <jiangxinyu@kylinos.cn> - 2.10-3
 - Type:enhancement
 - ID:NA
